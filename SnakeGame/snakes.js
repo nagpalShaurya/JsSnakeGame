@@ -1,6 +1,6 @@
 const cvs = document.getElementById("snake");
 const ctx = cvs.getContext("2d");
-var bestscore=0;
+var best=0;
 
 // create the unit
 const box = 32;
@@ -54,19 +54,21 @@ let score = 0;
 
 let d;
 
-document.addEventListener("keydown",direction);
+
 
 function getStoredScore()
 {
-	if(!localStorage.bestscore)
+	if(!localStorage.bestScore)
 	{
-		localStorage.bestscore = JSON.stringify(0);
+		best = 0;
 	}
 	else
 	{
-		bestscore = JSON.parse(localStorage.bestScore);
+		best = JSON.parse(localStorage.bestScore);
 	}
 }
+document.addEventListener("keydown",direction);
+
 function direction(event){
     let key = event.keyCode;
     if( key == 37 && d != "RIGHT"){
@@ -151,29 +153,31 @@ function draw(){
 		ctx.font = "25px Exo";
 		ctx.fillText("Press F5 to play again",200,330);
         dead.play();
+		storeScore(best);
+		
     }
     
     snake.unshift(newHead);
+
     
 	//score
     ctx.fillStyle = "white";
     ctx.font = "45px Changa one";
     ctx.fillText(score,2*box,1.6*box);
 
+		if(score>best)
+		{
+			best = score;
+		}		
 	//best
 	ctx.font = "35px Changa one";
 	ctx.fillText("Best",14*box,1.6*box);
-	ctx.fillText(bestscore,16.5*box,1.6*box);
-	if(score>bestscore)
-	{
-		bestscore = score;
-	}
-	storeScore();
+	ctx.fillText(best,16.5*box,1.6*box);
 	
 }
-function storeScore()
+function storeScore(s)
 {
-	localStorage.bestScore = bestscore;
+	localStorage.bestScore = JSON.stringify(s);
 }
 // call draw function every 100 ms
 
